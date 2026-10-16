@@ -1,6 +1,12 @@
 name: Publish LazyCat LPK
 'on':
-  workflow_dispatch: null
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Validate without store publication
+        type: boolean
+        default: true
+        required: true
 permissions:
   contents: write
   pull-requests: write
@@ -12,6 +18,7 @@ jobs:
     uses: ca-x/lazycat-github-action/.github/workflows/lazycat.yml@v1
     with:
       operation: auto
+      dry-run: ${{ inputs.dry-run }}
       config: .github/lazycat-action.yml
       image-id: freshrss
       toolchains: none
