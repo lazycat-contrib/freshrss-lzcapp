@@ -1,12 +1,8 @@
 name: Publish LazyCat LPK
 'on':
+  schedule:
+    - cron: "39 */6 * * *"
   workflow_dispatch:
-    inputs:
-      dry-run:
-        description: Validate without store publication
-        type: boolean
-        default: true
-        required: true
 permissions:
   contents: write
   pull-requests: write
@@ -18,7 +14,7 @@ jobs:
     uses: ca-x/lazycat-github-action/.github/workflows/lazycat.yml@v1
     with:
       operation: auto
-      dry-run: ${{ inputs.dry-run }}
+      dry-run: ${{ github.event_name != 'schedule' }}
       config: .github/lazycat-action.yml
       image-id: freshrss
       toolchains: none
