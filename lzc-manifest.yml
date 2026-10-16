@@ -1,0 +1,28 @@
+application:
+  subdomain: freshrss
+  public_path:
+  - /
+  upstreams:
+  - location: /
+    backend: http://freshrss:80/
+  injects:
+  - id: open-save-chooser
+    'on': browser
+    when:
+    - /*
+    do:
+    - src: file:///lzcapp/pkg/content/lazycat-injects/lzc-file-chooser-inject.js
+services:
+  freshrss:
+    image: docker.1ms.run/freshrss/freshrss:1.30.1
+    environment:
+    - TZ=Asia/Shanghai
+    - CRON_MIN=7,37
+    - FRESHRSS_INSTALL=--base-url https://{{ .S.AppDomain }} --default-user admin
+      --language zh-cn
+    - FRESHRSS_USER=--user admin --language zh-cn --password {{ .U.admin_password
+      }}
+    binds:
+    - /lzcapp/var/data:/var/www/FreshRSS/data
+    - /lzcapp/var/extensions:/var/www/FreshRSS/extensions
+usage: 首次安装通过官方环境变量创建 admin 账号，密码为安装时填写的初始密码。环境变量仅首次初始化生效，后续请在应用中改密码。
